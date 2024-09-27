@@ -7,6 +7,8 @@ import argparse
 import re
 import subprocess
 import requests
+import logging
+import http.client
 import shutil
 from bs4 import BeautifulSoup
 from termcolor import cprint
@@ -197,6 +199,7 @@ def access_url(url):
     status = ''
     is_broken = False
     try_with_trusted_ca_bundle = False
+    print(f'Accessing URL{url}')
 
     try:
         r = requests.head(url, allow_redirects=True, headers=http_headers)
@@ -249,6 +252,7 @@ def test_url(url):
     global link_cache
     status = ''
     is_broken = False
+    print(f'Testing URL{url}')
     # Test if link was already tested before.
     if url in link_cache:
         return link_cache[url]
@@ -358,6 +362,14 @@ def main():
     link_set = set()
     link_to_files = defaultdict(set)
     exclude_dirs = [dir.lower() for dir in args.exclude_dirs] if args.exclude_dirs else []
+
+    # Ensable debug logs
+    http.client.HTTPConnection.debuglevel = 1
+    logging.basicConfig()
+    logging.getLogger().setLevel(logging.DEBUG)
+    requests_log = logging.getLogger("requests.packages.urllib3")
+    requests_log.setLevel(logging.DEBUG)
+    requests_log.propagate = True
 
     if args.user_agent != None:
         http_headers.update({ 'User-Agent': args.user_agent })
