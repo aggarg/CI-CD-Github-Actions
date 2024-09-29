@@ -389,6 +389,7 @@ def main():
     if args.user_agent != None:
         http_headers.update({ 'User-Agent': args.user_agent })
     http_headers.update({ 'Accept-Encoding': '*' })
+    http_headers.update({ 'Connection': 'close' })
 
     if args.verbose:
         print("Using User-Agent: {}".format(http_headers['User-Agent']))
