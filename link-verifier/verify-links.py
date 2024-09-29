@@ -244,7 +244,7 @@ def access_url(url):
             status = 'Error'
 
     print('----------------CURL Start---------------------------')
-    curl_cmd = f'curl -sIL -w "%{{http_code}}" {url}'
+    curl_cmd = f'curl -v -sIL -w "%{{http_code}}" {url}'
     print(curl_cmd)
     process = subprocess.run(
         curl_cmd,
