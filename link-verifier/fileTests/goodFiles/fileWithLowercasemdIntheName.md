@@ -10,7 +10,7 @@ https://www.google.com/
 # Test that it will find this url by dropping the coma
 https://www.google.com,
 # Debug issue with Renesas URLs
-https://www.renesas.com/us/en/document/mah/rh850f1k-group-users-manual-hardware?r=1170166
-https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rh850-automotive-mcus
-https://www.renesas.com/us/en/software-tool/c-compiler-package-rh850-family#downloads
+https://www.renesas.com/en/document/mah/rh850f1k-group-users-manual-hardware?r=1170166
+https://www.renesas.com/en/products/microcontrollers-microprocessors/rh850-automotive-mcus
+https://www.renesas.com/en/software-tool/c-compiler-package-rh850-family#downloads
 
