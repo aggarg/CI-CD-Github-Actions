@@ -387,7 +387,7 @@ def main():
     requests_log.propagate = True
 
     if args.user_agent != None:
-        http_headers.update({ 'User-Agent': args.user_agent })
+        http_headers.update({ 'User-Agent': 'curl/7.81.0' })
     http_headers.update({ 'Accept-Encoding': '*' })
     http_headers.update({ 'Connection': 'close' })
 
