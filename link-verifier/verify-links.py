@@ -243,20 +243,20 @@ def access_url(url):
             is_broken = True
             status = 'Error'
 
-    print('----------------CURL Start---------------------------')
-    curl_cmd = f'curl -v --http1.1 -sIL -w "%{{http_code}}" {url}'
-    print(curl_cmd)
-    process = subprocess.run(
-        curl_cmd,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        shell=True,
-        encoding="utf-8",
-        universal_newlines=True
-    )
-    print(process.stdout)
-    print(process.returncode)
-    print('----------------CURL End---------------------------')
+    if is_broken == True:
+        curl_cmd = f'curl -sIL -o /dev/null -w "%{{http_code}}" {url}'
+        process = subprocess.run(
+            curl_cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            shell=True,
+            encoding="utf-8",
+            universal_newlines=True
+        )
+        http_status_code = int(process.stdout)
+        if http_status_code == 200:
+            is_broken = False
+            status = http_status_code
 
     return is_broken, status
 
