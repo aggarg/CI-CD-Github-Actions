@@ -243,6 +243,21 @@ def access_url(url):
             is_broken = True
             status = 'Error'
 
+    print('----------------CURL Start---------------------------')
+    curl_cmd = f'curl -sIL -w "%{{http_code}}" {url}'
+    print(curl_cmd)
+    process = subprocess.run(
+        curl_cmd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        shell=True,
+        encoding="utf-8",
+        universal_newlines=True
+    )
+    print(process.stdout)
+    print(process.returncode)
+    print('----------------CURL End---------------------------')
+
     return is_broken, status
 
 def test_url(url):
