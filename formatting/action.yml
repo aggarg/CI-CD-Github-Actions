@@ -64,23 +64,17 @@ runs:
         # ${{ env.stepName }}
         echo -e "::group::${{ env.bashInfo }} ${{ env.stepName }} ${{ env.bashEnd }}"
 
-        wget https://github.com/uncrustify/uncrustify/archive/refs/tags/uncrustify-0.69.0.tar.gz -O uncrustify-0.69.0.tar.gz
+        mkdir -p ~/uncrustify
+        wget https://github.com/uncrustify/uncrustify/archive/refs/tags/uncrustify-0.69.0.tar.gz -O ~/uncrustify/uncrustify-0.69.0.tar.gz
 
         EXPECTED_SHA256="33bd97a07f7c4bd114874f73171aca220bf05c17108f8505a117b97374a347b6"
-        GENERATED_SHA256=$(sha256sum uncrustify-0.69.0.tar.gz | awk '{print $1}')
+        GENERATED_SHA256=$(sha256sum ~/uncrustify/uncrustify-0.69.0.tar.gz | awk '{print $1}')
 
         if [ "$GENERATED_SHA256" = "$EXPECTED_SHA256" ]; then
-          tar xzvf uncrustify-0.69.0.tar.gz && cd uncrustify-uncrustify-0.69.0
+          tar xzvf ~/uncrustify/uncrustify-0.69.0.tar.gz -C ~/uncrustify/
 
-          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-          cmake --build build -- -j$(nproc) -s
-
-          mkdir -p ~/uncrustify
-          cd build && cp uncrustify ~/uncrustify/
-
-          # Delete uncrustify source after installing.
-          cd ../..
-          rm -rf uncrustify*
+          cmake -S ~/uncrustify/uncrustify-uncrustify-0.69.0 -B ~/uncrustify/build -DCMAKE_BUILD_TYPE=Release
+          cmake --build ~/uncrustify/build -- -j$(nproc) -s
 
           echo -e "${{ env.bashPass }} ${{ env.stepName }} ${{ env.bashEnd }}"
         else
@@ -103,7 +97,7 @@ runs:
         # ${{ env.stepName }}
         echo -e "::group::${{ env.bashInfo }} ${{ env.stepName }} ${{ env.bashEnd }}"
 
-        echo -e "${{ env.bashInfo }} Using Uncrustify Version: "$(~/uncrustify/uncrustify --version)" ${{ env.bashEnd }}"
+        echo -e "${{ env.bashInfo }} Using Uncrustify Version: "$(~/uncrustify/build/uncrustify --version)" ${{ env.bashEnd }}"
 
         exitCode=0
         export PATH="$PATH:$GITHUB_ACTION_PATH"
@@ -138,8 +132,8 @@ runs:
         # Get all .c and .h files, as well as any other requested file types.
         # Then run uncrustify with the common config file.
 
-        echo -e "${{ env.bashInfo }} fdfind -e c -e h ${args} --exec ~/uncrustify/uncrustify --no-backup --replace --if-changed -c https://github.com/FreeRTOS/CI-CD-Github-Actions/blob/main/formatting/uncrustify.cfg -l C ${{ env.bashEnd }}"
-        fdfind -e c -e h ${args} --exec ~/uncrustify/uncrustify --no-backup --replace --if-changed -c $GITHUB_ACTION_PATH/uncrustify.cfg -l C
+        echo -e "${{ env.bashInfo }} fdfind -e c -e h ${args} --exec ~/uncrustify/build/uncrustify --no-backup --replace --if-changed -c https://github.com/FreeRTOS/CI-CD-Github-Actions/blob/main/formatting/uncrustify.cfg -l C ${{ env.bashEnd }}"
+        fdfind -e c -e h ${args} --exec ~/uncrustify/build/uncrustify --no-backup --replace --if-changed -c $GITHUB_ACTION_PATH/uncrustify.cfg -l C
 
         # Replace all trailing whitespace, exclude photo and binary files
         echo -e "${{ env.bashInfo }} Check for Trailing Whitespace ${{ env.bashEnd }}"
