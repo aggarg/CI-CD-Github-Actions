@@ -76,6 +76,8 @@ runs:
           cmake -S ~/uncrustify/uncrustify-uncrustify-0.69.0 -B ~/uncrustify/build -DCMAKE_BUILD_TYPE=Release
           cmake --build ~/uncrustify/build -- -j$(nproc) -s
 
+          cp ~/uncrustify/build/uncrustify ~/uncrustify/
+
           echo -e "${{ env.bashPass }} ${{ env.stepName }} ${{ env.bashEnd }}"
         else
           echo -e "${{ env.bashFail }} SHA256 checksum verification failed for uncrustify-0.69.0.tar.gz ${{ env.bashEnd }}"
@@ -97,7 +99,7 @@ runs:
         # ${{ env.stepName }}
         echo -e "::group::${{ env.bashInfo }} ${{ env.stepName }} ${{ env.bashEnd }}"
 
-        echo -e "${{ env.bashInfo }} Using Uncrustify Version: "$(~/uncrustify/build/uncrustify --version)" ${{ env.bashEnd }}"
+        echo -e "${{ env.bashInfo }} Using Uncrustify Version: "$(~/uncrustify/uncrustify --version)" ${{ env.bashEnd }}"
 
         exitCode=0
         export PATH="$PATH:$GITHUB_ACTION_PATH"
@@ -132,8 +134,8 @@ runs:
         # Get all .c and .h files, as well as any other requested file types.
         # Then run uncrustify with the common config file.
 
-        echo -e "${{ env.bashInfo }} fdfind -e c -e h ${args} --exec ~/uncrustify/build/uncrustify --no-backup --replace --if-changed -c https://github.com/FreeRTOS/CI-CD-Github-Actions/blob/main/formatting/uncrustify.cfg -l C ${{ env.bashEnd }}"
-        fdfind -e c -e h ${args} --exec ~/uncrustify/build/uncrustify --no-backup --replace --if-changed -c $GITHUB_ACTION_PATH/uncrustify.cfg -l C
+        echo -e "${{ env.bashInfo }} fdfind -e c -e h ${args} --exec ~/uncrustify/uncrustify --no-backup --replace --if-changed -c https://github.com/FreeRTOS/CI-CD-Github-Actions/blob/main/formatting/uncrustify.cfg -l C ${{ env.bashEnd }}"
+        fdfind -e c -e h ${args} --exec ~/uncrustify/uncrustify --no-backup --replace --if-changed -c $GITHUB_ACTION_PATH/uncrustify.cfg -l C
 
         # Replace all trailing whitespace, exclude photo and binary files
         echo -e "${{ env.bashInfo }} Check for Trailing Whitespace ${{ env.bashEnd }}"
